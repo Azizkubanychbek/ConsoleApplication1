@@ -1,6 +1,6 @@
 #include <iostream>
 
-#define MODE 1
+#define MODE 9
 #if MODE==1
 void add(int j, int b)
 {
@@ -8,9 +8,9 @@ void add(int j, int b)
 
 }
 #endif
-int main(int argc, char** argv) {
+int main() {
 #ifndef MODE
-	std::cout << "Where is MODE?";
+#error Where is MODE?
 #endif // !MODE
 
 #ifdef MODE
@@ -24,10 +24,10 @@ int main(int argc, char** argv) {
 	std::cout << "Ввeдите два числа через enter\n";
 	std::cin >> b >> j;
 	std::cout << "Сумма равна ";
-	add(b,j);
-	
+	add(b, j);
+
 #else
-	std::sout << "Try smt better";
-#endif
+	std::cout << "Неизвестный режим. Завершение работы";
 #endif 
+#endif
 }
