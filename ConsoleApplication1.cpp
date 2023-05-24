@@ -1,33 +1,55 @@
 #include <iostream>
 
-#define MODE 9
-#if MODE==1
-void add(int j, int b)
-{
-	std::cout << j + b;
+class SmartArray {
+private:
+    int* data;
+    int size;
 
-}
-#endif
+public:
+    SmartArray(int size) : size(size) {
+        data = new int[size];
+    }
+
+    ~SmartArray() {
+        delete[] data;
+    }
+
+    void add_element(int element) {
+        if (size < size + 1) {
+            int* new_data = new int[size + 1];
+
+            for (int i = 0; i < size; i++) {
+                new_data[i] = data[i];
+            }
+
+            new_data[size] = element;
+
+            delete[] data;
+            data = new_data;
+            size++;
+        }
+    }
+
+    int get_element(int index) const {
+        if (index >= 0 && index < size) {
+            return data[index];
+        } else {
+            throw std::out_of_range("Invalid index");
+        }
+    }
+};
+
 int main() {
-#ifndef MODE
-#error Where is MODE?
-#endif // !MODE
+    SmartArray arr(5);
+    arr.add_element(1);
+    arr.add_element(4);
+    arr.add_element(155);
 
-#ifdef MODE
-#if MODE==0
-	std::cout << "Работаю в режиме тренировки";
-#elif MODE==1
-	int j = 9;
-	int b = 0;
+    SmartArray new_array(2);
+    new_array.add_element(44); 
+    new_array.add_element(34);
 
-	std::cout << "Работаю в боевом режиме\n";
-	std::cout << "Ввeдите два числа через enter\n";
-	std::cin >> b >> j;
-	std::cout << "Сумма равна ";
-	add(b, j);
+    arr = new_array;
 
-#else
-	std::cout << "Неизвестный режим. Завершение работы";
-#endif 
-#endif
+    return 0;
 }
