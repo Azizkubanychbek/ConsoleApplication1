@@ -1,55 +1,66 @@
 #include <iostream>
 
-class SmartArray {
+class smart_array {
 private:
     int* data;
     int size;
+    int capacity;
 
 public:
-    SmartArray(int size) : size(size) {
-        data = new int[size];
+    smart_array(int num_elements) : size(0), capacity(num_elements) {
+        data = new int[capacity];
     }
 
-    ~SmartArray() {
+    ~smart_array() {
         delete[] data;
     }
 
     void add_element(int element) {
-        if (size < size + 1) {
-            int* new_data = new int[size + 1];
+        if (size >= capacity) {
+            // Выделение нового блока памяти с увеличенной ёмкостью
+            int new_capacity = capacity * 2;
+            int* new_data = new int[new_capacity];
 
+            // Копирование данных из старого блока в новый
             for (int i = 0; i < size; i++) {
                 new_data[i] = data[i];
             }
 
-            new_data[size] = element;
-
+            // Освобождение старого блока памяти
             delete[] data;
+
+            // Перенаправление указателя на новый блок памяти
             data = new_data;
-            size++;
+            capacity = new_capacity;
         }
+
+        // Добавление нового элемента
+        data[size] = element;
+        size++;
     }
 
     int get_element(int index) const {
-        if (index >= 0 && index < size) {
-            return data[index];
-        } else {
+        if (index < 0 || index >= size) {
             throw std::out_of_range("Invalid index");
         }
+
+        return data[index];
     }
 };
 
 int main() {
-    SmartArray arr(5);
-    arr.add_element(1);
-    arr.add_element(4);
-    arr.add_element(155);
-
-    SmartArray new_array(2);
-    new_array.add_element(44); 
-    new_array.add_element(34);
-
-    arr = new_array;
+    try {
+        smart_array arr(5);
+        arr.add_element(1);
+        arr.add_element(4);
+        arr.add_element(155);
+        arr.add_element(14);
+        arr.add_element(15);
+        std::cout << arr.get_element(1) << std::endl;
+    }
+    catch (const std::exception& ex) {
+        std::cout << ex.what() << std::endl;
+    }
 
     return 0;
 }
